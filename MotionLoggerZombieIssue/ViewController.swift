@@ -10,16 +10,13 @@ import UIKit
 
 class ViewController: UIViewController {
 
+    let motionManager = MotionManager.shared
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        
+        motionManager.start()
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-
 
 }
 

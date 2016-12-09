@@ -12,6 +12,7 @@
 		F8023E2D1DFB77C70083499C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F8023E2B1DFB77C70083499C /* Main.storyboard */; };
 		F8023E2F1DFB77C70083499C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F8023E2E1DFB77C70083499C /* Assets.xcassets */; };
 		F8023E321DFB77C70083499C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F8023E301DFB77C70083499C /* LaunchScreen.storyboard */; };
+		F8023E3A1DFB77DB0083499C /* MotionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8023E391DFB77DB0083499C /* MotionManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,6 +23,7 @@
 		F8023E2E1DFB77C70083499C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F8023E311DFB77C70083499C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		F8023E331DFB77C70083499C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F8023E391DFB77DB0083499C /* MotionManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MotionManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,6 +58,7 @@
 			children = (
 				F8023E271DFB77C70083499C /* AppDelegate.swift */,
 				F8023E291DFB77C70083499C /* ViewController.swift */,
+				F8023E391DFB77DB0083499C /* MotionManager.swift */,
 				F8023E2B1DFB77C70083499C /* Main.storyboard */,
 				F8023E2E1DFB77C70083499C /* Assets.xcassets */,
 				F8023E301DFB77C70083499C /* LaunchScreen.storyboard */,
@@ -138,6 +141,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F8023E2A1DFB77C70083499C /* ViewController.swift in Sources */,
+				F8023E3A1DFB77DB0083499C /* MotionManager.swift in Sources */,
 				F8023E281DFB77C70083499C /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

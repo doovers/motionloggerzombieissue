@@ -85,17 +85,12 @@ class MotionManager: NSObject {
     func startAccelerometer() {
         if motionManager.isAccelerometerAvailable {
             motionManager.accelerometerUpdateInterval = interval
-            motionManager.startAccelerometerUpdates(to: queue) {
-                [weak self] (data, error) in
-                
-                guard let weakSelf = self else { return }
-                
+            motionManager.startAccelerometerUpdates(to: queue) { (data, error) in
                 if error != nil {
                     log.error("Accelerometer Error: \(error!)")
                 }
                 guard let data = data else { return }
-                
-                weakSelf.motionDataRecord.accelerometer = data
+                self.motionDataRecord.accelerometer = data
             }
         } else {
             log.error("The accelerometer is not available")
@@ -106,17 +101,12 @@ class MotionManager: NSObject {
     func startGyroscope() {
         if motionManager.isGyroAvailable {
             motionManager.gyroUpdateInterval = interval
-            motionManager.startGyroUpdates(to: queue) {
-                [weak self] (data, error) in
-                
-                guard let weakSelf = self else { return }
-                
+            motionManager.startGyroUpdates(to: queue) { (data, error) in
                 if error != nil {
                     log.error("Gyroscope Error: \(error!)")
                 }
                 guard let data = data else { return }
-                
-                weakSelf.motionDataRecord.gyro = data
+                self.motionDataRecord.gyro = data
             }
         } else {
             log.error("The gyroscope is not available")
@@ -126,17 +116,12 @@ class MotionManager: NSObject {
     func startMagnetometer() {
         if motionManager.isMagnetometerAvailable {
             motionManager.magnetometerUpdateInterval = interval
-            motionManager.startMagnetometerUpdates(to: queue) {
-                [weak self] (data, error) in
-                
-                guard let weakSelf = self else { return }
-                
+            motionManager.startMagnetometerUpdates(to: queue) { (data, error) in
                 if error != nil {
                     log.error("Magnetometer Error: \(error!)")
                 }
                 guard let data = data else { return }
-                
-                weakSelf.motionDataRecord.magnetometer = data
+                self.motionDataRecord.magnetometer = data
             }
         } else {
             log.error("The magnetometer is not available")
@@ -146,19 +131,14 @@ class MotionManager: NSObject {
     func startDeviceMotion() {
         if motionManager.isDeviceMotionAvailable {
             motionManager.deviceMotionUpdateInterval = interval
-            motionManager.startDeviceMotionUpdates(using: attitudeReferenceFrame, to: queue) {
-                [weak self] (data, error) in
-                
-                guard let weakSelf = self else { return }
-                
+            motionManager.startDeviceMotionUpdates(using: attitudeReferenceFrame, to: queue) { (data, error) in
                 if error != nil {
                     log.error("Device Motion Error: \(error!)")
                 }
                 guard let data = data else { return }
-                
-                weakSelf.motionDataRecord.deviceMotion = data
-                weakSelf.motionDataRecord.timestamp = Date().timeIntervalSince1970
-                weakSelf.handleMotionUpdate()
+                self.motionDataRecord.deviceMotion = data
+                self.motionDataRecord.timestamp = Date().timeIntervalSince1970
+                self.handleMotionUpdate()
             }
         } else {
             log.error("Device motion is not available")

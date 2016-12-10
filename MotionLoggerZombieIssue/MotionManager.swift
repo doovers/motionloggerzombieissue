@@ -16,16 +16,79 @@ class log {
     }
 }
 
+struct Floor {
+    var level: Int
+}
+
+struct Location {
+    var timestamp: Date
+    var coordinate: CLLocationCoordinate2D
+    var altitude: CLLocationDistance
+    var floor: Floor?
+    var horizontalAccuracy: CLLocationAccuracy
+    var verticalAccuracy: CLLocationAccuracy
+    var speed: CLLocationSpeed
+    var course: CLLocationDirection
+}
+
+struct Heading {
+    var timestamp: Date
+    var magneticHeading: CLLocationDirection
+    var trueHeading: CLLocationDirection
+    var headingAccuracy: CLLocationDirection
+    var x: CLHeadingComponentValue
+    var y: CLHeadingComponentValue
+    var z: CLHeadingComponentValue
+}
+
+struct Attitude {
+    var roll: Double
+    var pitch: Double
+    var yaw: Double
+    var rotationMatrix: CMRotationMatrix
+    var quaternion: CMQuaternion
+}
+
+struct DeviceMotion {
+    var timestamp: TimeInterval
+    var attitude: Attitude
+    var rotationRate: CMRotationRate
+    var gravity: CMAcceleration
+    var userAcceleration: CMAcceleration
+    var magneticField: CMCalibratedMagneticField
+}
+
+struct AltitudeData {
+    var timestamp: TimeInterval
+    var relativeAltitude: NSNumber
+    var pressure: NSNumber
+}
+
+struct AccelerometerData {
+    var timestamp: TimeInterval
+    var acceleration: CMAcceleration
+}
+
+struct GyroData {
+    var timestamp: TimeInterval
+    var rotationRate: CMRotationRate
+}
+
+struct MagnetometerData {
+    var timestamp: TimeInterval
+    var magneticField: CMMagneticField
+}
+
 struct MotionDataRecord {
     var timestamp: TimeInterval = 0
-    var location: CLLocation?
-    var heading: CLHeading?
+    var location: Location?
+    var heading: Heading?
     var motionAttitudeReferenceFrame: CMAttitudeReferenceFrame = .xTrueNorthZVertical
-    var deviceMotion: CMDeviceMotion?
-    var altimeter: CMAltitudeData?
-    var accelerometer: CMAccelerometerData?
-    var gyro: CMGyroData?
-    var magnetometer: CMMagnetometerData?
+    var deviceMotion: DeviceMotion?
+    var altimeter: AltitudeData?
+    var accelerometer: AccelerometerData?
+    var gyro: GyroData?
+    var magnetometer: MagnetometerData?
 }
 
 class MotionManager: NSObject {
@@ -90,7 +153,8 @@ class MotionManager: NSObject {
                     log.error("Accelerometer Error: \(error!)")
                 }
                 guard let data = data else { return }
-                self.motionDataRecord.accelerometer = data
+                let accelerometerData = AccelerometerData(timestamp: data.timestamp, acceleration: data.acceleration)
+                self.motionDataRecord.accelerometer = accelerometerData
             }
         } else {
             log.error("The accelerometer is not available")
@@ -106,7 +170,8 @@ class MotionManager: NSObject {
                     log.error("Gyroscope Error: \(error!)")
                 }
                 guard let data = data else { return }
-                self.motionDataRecord.gyro = data
+                let gyroData = GyroData(timestamp: data.timestamp, rotationRate: data.rotationRate)
+                self.motionDataRecord.gyro = gyroData
             }
         } else {
             log.error("The gyroscope is not available")
@@ -121,7 +186,8 @@ class MotionManager: NSObject {
                     log.error("Magnetometer Error: \(error!)")
                 }
                 guard let data = data else { return }
-                self.motionDataRecord.magnetometer = data
+                let magnetometerData = MagnetometerData(timestamp: data.timestamp, magneticField: data.magneticField)
+                self.motionDataRecord.magnetometer = magnetometerData
             }
         } else {
             log.error("The magnetometer is not available")
@@ -136,7 +202,9 @@ class MotionManager: NSObject {
                     log.error("Device Motion Error: \(error!)")
                 }
                 guard let data = data else { return }
-                self.motionDataRecord.deviceMotion = data
+                let attitude = Attitude(roll: data.attitude.roll, pitch: data.attitude.pitch, yaw: data.attitude.yaw, rotationMatrix: data.attitude.rotationMatrix, quaternion: data.attitude.quaternion)
+                let deviceMotion = DeviceMotion(timestamp: data.timestamp, attitude: attitude, rotationRate: data.rotationRate, gravity: data.gravity, userAcceleration: data.userAcceleration, magneticField: data.magneticField)
+                self.motionDataRecord.deviceMotion = deviceMotion
                 self.motionDataRecord.timestamp = Date().timeIntervalSince1970
                 self.handleMotionUpdate()
             }
@@ -173,11 +241,17 @@ extension MotionManager: CLLocationManagerDelegate {
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let location = locations.last else { return }
-        motionDataRecord.location = location
+        var floor: Floor?
+        if let clFloor = location.floor {
+            floor = Floor(level: clFloor.level)
+        }
+        let locationData = Location(timestamp: location.timestamp, coordinate: location.coordinate, altitude: location.altitude, floor: floor, horizontalAccuracy: location.horizontalAccuracy, verticalAccuracy: location.verticalAccuracy, speed: location.speed, course: location.course)
+        motionDataRecord.location = locationData
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
-        motionDataRecord.heading = newHeading
+        let heading = Heading(timestamp: newHeading.timestamp, magneticHeading: newHeading.magneticHeading, trueHeading: newHeading.trueHeading, headingAccuracy: newHeading.headingAccuracy, x: newHeading.x, y: newHeading.y, z: newHeading.z)
+        motionDataRecord.heading = heading
     }
     
 }
